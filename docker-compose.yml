@@ -1,0 +1,37 @@
+version: '3.8'
+
+services:
+
+  db:
+    container_name: phonebook_postgres
+    image: postgres:14.1-alpine
+    env_file:
+      - .env
+    volumes:
+      - ./db_backup:/var/lib/postgresql/data
+
+    ports:
+      - 5431:5432
+  django:
+    container_name: phonebook_django
+    tty: true
+    stdin_open: true
+    build: .
+    volumes:
+      - .:/app
+    command: >
+      sh -c "python /app/manage.py collectstatic --noinput &&
+             python /app/manage.py makemigrations &&
+             python /app/manage.py migrate &&
+             gunicorn tam_phonebook.wsgi --threads 4 --timeout 240 --bind 0.0.0.0:2284  --reload --workers 3 --chdir /app/"
+    restart: always
+    expose:
+      - 2282
+    ports:
+      - 2284:2284
+    env_file:
+      - .env
+    depends_on:
+      - db
+
+
