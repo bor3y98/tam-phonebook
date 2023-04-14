@@ -16,4 +16,4 @@ RUN pip install -r req.txt
 
 COPY . /app
 
-EXPOSE 2284
+EXPOSE 8000

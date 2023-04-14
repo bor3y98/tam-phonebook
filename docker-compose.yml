@@ -23,12 +23,12 @@ services:
       sh -c "python /app/manage.py collectstatic --noinput &&
              python /app/manage.py makemigrations &&
              python /app/manage.py migrate &&
-             gunicorn tam_phonebook.wsgi --threads 4 --timeout 240 --bind 0.0.0.0:2284  --reload --workers 3 --chdir /app/"
+             gunicorn tam_phonebook.wsgi --threads 4 --timeout 240 --bind 0.0.0.0:8000  --reload --workers 3 --chdir /app/"
     restart: always
     expose:
-      - 2282
+      - 8000
     ports:
-      - 2284:2284
+      - 8000:8000
     env_file:
       - .env
     depends_on:
